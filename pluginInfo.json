@@ -1,0 +1,42 @@
+{
+    "repoName": "fpp-legacy-proxy",
+    "name": "Legacy Controller Proxy",
+    "author": "Jason Cross (jcross)",
+    "description": "Modern, phone-friendly web pages for older E1.31 / sACN pixel controllers whose built-in pages no longer work properly in current browsers (for example DIYLEDExpress E1.31 Bridge and SanDevices E68x). Pick a controller and the plugin fetches its page, redraws it, and sends your changes back exactly as the controller's own page would. It only connects to the controllers you add or list in FPP's Proxy Settings.",
+    "homeURL": "https://github.com/jcrossbdn/fpp-legacy-proxy",
+    "srcURL": "https://github.com/jcrossbdn/fpp-legacy-proxy.git",
+    "bugURL": "https://github.com/jcrossbdn/fpp-legacy-proxy/issues",
+    "iconURL": "https://raw.githubusercontent.com/jcrossbdn/fpp-legacy-proxy/master/icon.png",
+    "allowUpdates": 1,
+    "releaseNotesStyle": "gitHistory",
+    "privacy": {
+        "summary": "Talks only to the lighting controllers you list (or that are in FPP's Proxy Settings), on your own network, when you open their pages. Nothing is sent anywhere else.",
+        "sends": [
+            {
+                "to": "the controllers you add, or that are listed in FPP's Proxy Settings",
+                "what": "the page requests and setting changes you make, exactly as the controller's own web page would send them",
+                "why": "to show the controller's settings and apply your changes",
+                "alwaysOn": false
+            }
+        ],
+        "collects": [],
+        "sensors": [],
+        "remoteAccess": "none",
+        "systemChanges": [],
+        "closedCode": false,
+        "other": "Reads FPP's Proxy Settings list to fill in devices (can be turned off). Opens no ports and installs no services. Like FPP's own Proxy feature, anyone who can reach FPP's web UI can reach the listed controllers through this plugin."
+    },
+    "versions": [
+        {
+            "minFPPVersion": "10.0",
+            "maxFPPVersion": "0",
+            "branch": "master",
+            "sha": "",
+            "dependencies": {
+                "packages": [
+                    "python3"
+                ]
+            }
+        }
+    ]
+}
