@@ -1,8 +1,11 @@
 <?php
 // Legacy Controller Proxy - main page (rendered inside FPP's UI by plugin.php)
 $flpStatic = 'plugin.php?plugin=fpp-legacy-proxy&nopage=1&file=static/';
+// FPP tells browsers to cache JS/CSS for a year, so stamp each URL with the file's
+// modification time (as FPP does with ?ref=): an update then always loads fresh files.
+$flpV = function ($f) { return '&v=' . @filemtime(__DIR__ . '/static/' . $f); };
 ?>
-<link rel="stylesheet" href="<?= $flpStatic ?>dashboard.css">
+<link rel="stylesheet" href="<?= $flpStatic ?>dashboard.css<?= $flpV('dashboard.css') ?>">
 
 <div id="flp" class="container-fluid flp">
   <div class="flp-head">
@@ -84,4 +87,4 @@ $flpStatic = 'plugin.php?plugin=fpp-legacy-proxy&nopage=1&file=static/';
   </div>
 </div>
 
-<script src="<?= $flpStatic ?>dashboard.js"></script>
+<script src="<?= $flpStatic ?>dashboard.js<?= $flpV('dashboard.js') ?>"></script>

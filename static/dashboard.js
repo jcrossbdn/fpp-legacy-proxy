@@ -178,6 +178,8 @@
   // Settings are saved by FPP's own PrintSetting* helpers; refresh the list after a change
   // (e.g. turning the FPP Proxy Settings list on or off).
   window.fpplegacyproxySettingChanged = () => load();
+  // (load() runs last; every element above exists in devices.php, and load()
+  //  reports its own failures in the list instead of leaving "Loading…".)
 
   load();
 })();

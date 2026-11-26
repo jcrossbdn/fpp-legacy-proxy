@@ -1094,8 +1094,10 @@ FPP_STYLESHEETS = [
 
 
 def static_url(ctx, name):
-    return ctx.get("static", "/static/").replace("{file}", name) if "{file}" in ctx.get("static", "") \
-        else ctx.get("static", "/static/") + name
+    """Plugin static file URL, version-stamped so browser caches never serve a stale copy."""
+    url = ctx.get("static", "/static/") + name
+    ver = ctx.get("static_ver")
+    return f"{url}{'&' if '?' in url else '?'}v={ver}" if ver else url
 
 
 def theme_script(ctx):

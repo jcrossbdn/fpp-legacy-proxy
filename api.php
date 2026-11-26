@@ -112,6 +112,17 @@ function fpplegacyproxy_home_url()
     return '/plugin.php?_menu=status&plugin=' . FppLegacyProxy::PLUGIN . '&page=devices.php';
 }
 
+// Newest modification time of the plugin's static files, used to stamp their URLs
+// (FPP serves JS/CSS with a one-year cache lifetime).
+function fpplegacyproxy_static_version()
+{
+    $v = 0;
+    foreach ((array) glob(__DIR__ . '/static/*') as $f) {
+        $v = max($v, (int) @filemtime($f));
+    }
+    return (string) $v;
+}
+
 function fpplegacyproxy_static_url()
 {
     return '/plugin.php?plugin=' . FppLegacyProxy::PLUGIN . '&nopage=1&file=static/';
@@ -134,7 +145,7 @@ function fpplegacyproxy_error_page($lp, $title, $detail, $code, $retry = '')
         . "<script>(function(){var o=" . json_encode($theme) . ",m=matchMedia('(prefers-color-scheme: dark)');"
         . "var t=(o==='light'||o==='dark')?o:(m.matches?'dark':'light');document.documentElement.setAttribute('data-bs-theme',t);})();</script>"
         . "<link rel='stylesheet' href='/css/fpp-bootstrap/dist/fpp-bootstrap-5-3.css'><link rel='stylesheet' href='/css/fpp-system-design.css'>"
-        . "<link rel='stylesheet' href='/css/fpp-dark.css'><link rel='stylesheet' href='" . $e(fpplegacyproxy_static_url() . 'legacy-proxy.css') . "'>"
+        . "<link rel='stylesheet' href='/css/fpp-dark.css'><link rel='stylesheet' href='" . $e(fpplegacyproxy_static_url() . 'legacy-proxy.css&v=' . fpplegacyproxy_static_version()) . "'>"
         . "</head><body><div class='sp-bar'><a class='sp-home' href='" . $e(fpplegacyproxy_home_url()) . "'>&larr; All devices</a></div>"
         . "<main class='sp-card sp-error' style='max-width:640px;margin:1.5rem auto'><h1>" . $e($title) . "</h1><p>" . $e($detail) . "</p>"
         . ($retry ? "<a class='sp-btn' href='" . $e($retry) . "'>Try again</a>" : '') . "</main></body></html>";
@@ -317,6 +328,7 @@ function fpplegacyproxy_device_page()
         'action' => $wasAction,
         'home' => fpplegacyproxy_home_url(),
         'static' => fpplegacyproxy_static_url(),
+        'static_ver' => fpplegacyproxy_static_version(),
         'live_url' => FppLegacyProxy::API . '/live/' . $d['target'],
         'classic_url' => FppLegacyProxy::API . '/view/' . $d['target'] . '/classic?next=' . rawurlencode($base),
         'modern_url' => FppLegacyProxy::API . '/view/' . $d['target'] . '/modern?next=' . rawurlencode($base),
