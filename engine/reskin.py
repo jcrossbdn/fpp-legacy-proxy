@@ -1062,7 +1062,7 @@ class Renderer:
   {test_badge}{live}
   <details class="sp-menu"><summary aria-label="Menu">&#8943;</summary><div>
     <a href="{E(ctx["base"])}">Reload</a>
-    <a href="{E(ctx.get("classic_url", "#"))}">Classic view</a>
+    <form method="post" action="{E(ctx.get("classic_url", "#"))}"><button type="submit" class="sp-menu-btn">Classic view</button></form>
     <a href="{E(ctx.get("home", "/"))}">All devices</a>
   </div></details>
 </header>
@@ -1149,7 +1149,8 @@ def classic(html: str, ctx: dict, note: str = "") -> str:
     head_extra = page_head(ctx, f'{ctx["label"]} (classic view)')
     if ctx.get("action"):
         head_extra += f"<script>history.replaceState(null,'',{_js(base)});</script>"
-    toggle = (f'<a class="sp-reload" href="{E(ctx["modern_url"])}">Modern view</a>'
+    toggle = (f'<form method="post" action="{E(ctx["modern_url"])}" class="sp-inline-form">'
+              f'<button type="submit" class="sp-reload sp-linkbtn">Modern view</button></form>'
               if ctx.get("modern_url") else "")
     bar = (
         f'<div class="sp-bar"><a class="sp-home" href="{E(ctx.get("home", "/"))}">&larr; All devices</a>'

@@ -8,6 +8,7 @@ PLUGIN_DATA="${MEDIADIR:-/home/fpp/media}/plugindata/fpp-legacy-proxy"
 # FPP 10.4+: keep the device list across a Reinstall.
 if [ "${FPP_PLUGIN_REINSTALL}" != "1" ]; then
     rm -rf "${PLUGIN_DATA}"
+    rm -f "${CFGDIR:-${MEDIADIR:-/home/fpp/media}/config}/plugin.fpp-legacy-proxy"
 else
     rm -rf "${PLUGIN_DATA}/locks"
 fi

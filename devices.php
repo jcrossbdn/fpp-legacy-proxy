@@ -53,22 +53,32 @@ $flpStatic = 'plugin.php?plugin=fpp-legacy-proxy&nopage=1&file=static/';
     </details>
   </div>
 
-  <!-- settings -->
+  <!-- settings: FPP plugin settings (config/plugin.fpp-legacy-proxy) via FPP's PrintSetting* helpers -->
   <div class="backdrop">
     <h3>Settings</h3>
-    <div class="flp-grid">
-      <label class="flp-field flp-check">
-        <input type="checkbox" id="flpIncludeFpp">
-        <span>Include devices from FPP's <a href="proxies.php">Proxy Settings</a> (<span id="flpFppCount">0</span> found)</span>
-      </label>
-      <label class="flp-field"><span>Default view</span>
-        <select class="form-select" id="flpDefaultView">
-          <option value="modern">Modern</option>
-          <option value="classic">Classic</option>
-        </select>
-      </label>
-      <label class="flp-field"><span>Device response timeout (seconds)</span>
-        <input type="number" class="form-control" id="flpReadTimeout" min="2" max="120"></label>
+    <div class="row flp-setting">
+      <div class="col-md-5 col-lg-4"><b>Include devices from FPP's <a href="proxies.php">Proxy Settings</a></b></div>
+      <div class="col-md">
+        <?php PrintSettingCheckbox("Include devices from FPP's Proxy Settings", "includeFppProxies", 0, 0, "1", "0",
+            "fpp-legacy-proxy", "fpplegacyproxySettingChanged", "1"); ?>
+        <span class="flp-note">(<span id="flpFppCount">0</span> found)</span>
+      </div>
+    </div>
+    <div class="row flp-setting">
+      <div class="col-md-5 col-lg-4"><b>Default view</b></div>
+      <div class="col-md">
+        <?php PrintSettingSelect("Default view", "defaultView", 0, 0, "modern",
+            array("Modern" => "modern", "Classic" => "classic"),
+            "fpp-legacy-proxy", "fpplegacyproxySettingChanged"); ?>
+      </div>
+    </div>
+    <div class="row flp-setting">
+      <div class="col-md-5 col-lg-4"><b>Device response timeout</b></div>
+      <div class="col-md">
+        <?php /* for type=number FPP uses $maxlength as max and $size as min */
+            PrintSettingTextSaved("readTimeout", 0, 0, 120, 2, "fpp-legacy-proxy", "20",
+            "fpplegacyproxySettingChanged", "", "number"); ?> seconds
+      </div>
     </div>
     <div class="flp-note"><b>Modern</b> redraws each device page for phones and desktops and falls back to Classic automatically if a page can't be redrawn. <b>Classic</b> shows the device's own page, tidied up. Each device can be switched between Modern and Classic from its own page (⋯ menu). Only devices listed here can be reached through this plugin.</div>
   </div>

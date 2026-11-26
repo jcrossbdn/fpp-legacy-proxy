@@ -45,3 +45,6 @@
 }
 .flp-hidden-wrap { margin-top: var(--fpp-sp-md, .75rem); }
 .flp-hidden-wrap summary { cursor: pointer; color: var(--fpp-text-secondary); min-height: 44px; display: flex; align-items: center; }
+
+.flp-setting { align-items: center; margin-bottom: .75rem; row-gap: .25rem; }
+.flp-setting input[type='checkbox'] { width: 1.25rem; height: 1.25rem; vertical-align: middle; }

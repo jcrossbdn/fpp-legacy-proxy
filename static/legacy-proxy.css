@@ -87,3 +87,6 @@ a { color: var(--accent); }
 .sp-link { background: transparent; color: var(--muted); padding: .3rem .5rem; }
 .sp-msg { color: var(--bad); min-height: 1.2em; font-size: .9rem; }
 .sp-error h1 { color: var(--bad); }
+
+.sp-inline-form { display: inline; margin: 0; }
+.sp-linkbtn { background: none !important; border: 0 !important; padding: 0 !important; margin: 0 !important; color: var(--accent) !important; font: inherit; font-weight: 500; cursor: pointer; min-height: 0 !important; }

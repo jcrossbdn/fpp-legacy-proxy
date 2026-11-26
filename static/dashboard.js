@@ -111,18 +111,12 @@
     }
   }
 
-  function applySettings(s, fppCount) {
-    $("flpIncludeFpp").checked = !!s.includeFppProxies;
-    $("flpDefaultView").value = s.defaultView;
-    $("flpReadTimeout").value = s.readTimeout;
-    if (fppCount !== undefined) $("flpFppCount").textContent = fppCount;
-  }
 
   async function load() {
     try {
       const j = await call("GET", "/devices");
       devices = j.devices || [];
-      applySettings(j.settings, j.fppProxiesCount);
+      $("flpFppCount").textContent = j.fppProxiesCount;
       const warn = $("flpStorageWarn");
       warn.classList.toggle("hidden", j.storageWritable !== false);
       $("flpStoragePath").textContent = j.storagePath || "";
@@ -140,7 +134,6 @@
     try {
       const j = await call(method, path, body);
       if (j.devices) { devices = j.devices; render(); }
-      if (j.settings) applySettings(j.settings);
       notify(j.message || "Saved");
       return true;
     } catch (e) { notify(e.message, true); return false; }
@@ -182,10 +175,9 @@
   $("flpCancel").onclick = hideForm;
   $("flpRefresh").onclick = load;
 
-  // -------------------------------------------------------------- settings
-  $("flpIncludeFpp").onchange = () => save("POST", "/prefs", { includeFppProxies: $("flpIncludeFpp").checked });
-  $("flpDefaultView").onchange = () => save("POST", "/prefs", { defaultView: $("flpDefaultView").value });
-  $("flpReadTimeout").onchange = () => save("POST", "/prefs", { readTimeout: $("flpReadTimeout").value });
+  // Settings are saved by FPP's own PrintSetting* helpers; refresh the list after a change
+  // (e.g. turning the FPP Proxy Settings list on or off).
+  window.fpplegacyproxySettingChanged = () => load();
 
   load();
 })();

@@ -19,8 +19,9 @@ body.sp-modern { -webkit-text-size-adjust: 100%; padding-bottom: env(safe-area-i
 .sp-menu summary::-webkit-details-marker { display: none; }
 .sp-menu > div { position: absolute; right: 0; top: 48px; min-width: 190px; background: var(--card);
   border: 1px solid var(--line); border-radius: 12px; padding: .35rem; box-shadow: var(--bs-box-shadow); }
-.sp-menu a { display: block; padding: .7rem .8rem; border-radius: 8px; text-decoration: none; color: var(--fg); }
-.sp-menu a:hover { background: var(--stripe); }
+.sp-menu a, .sp-menu .sp-menu-btn { display: block; width: 100%; text-align: left; font: inherit; background: none; border: 0; margin: 0; cursor: pointer; padding: .7rem .8rem; border-radius: 8px; text-decoration: none; color: var(--fg); }
+.sp-menu a:hover, .sp-menu .sp-menu-btn:hover { background: var(--stripe); }
+.sp-menu form { margin: 0; }
 
 /* ---- layout ---- */
 .sp-main { max-width: 1280px; margin: 0 auto; padding: .75rem; }

@@ -4,7 +4,7 @@ An FPP plugin that gives older E1.31 / sACN pixel controllers modern, phone-frie
 
 Many controllers' built-in pages no longer work properly in current browsers. Some send malformed HTTP headers, some use broken HTML, and none were built for phones. The plugin fetches a controller's page, redraws it, and sends your changes back **exactly as the controller's own page would**: same fields, same order, same encoding. Nothing on the controller changes.
 
-Tested with:
+Built and tested against pages captured from:
 
 - DIYLEDExpress E1.31 Bridge (firmware 4.04)
 - SanDevices E6804 (firmware 4.081)
@@ -33,7 +33,7 @@ Other controllers work through the generic engine. A page that can't be redrawn 
 
 ## Requirements
 
-- FPP 10.0 or later (developed against 10.4).
+- FPP 10.4 or later.
 - `python3` (preinstalled on FPP; listed as a dependency).
 - No extra Python packages, services or open ports.
 
@@ -117,11 +117,13 @@ The numeric code boxes are dropdowns. The labels come from the SanDevices manual
 
 ### Settings
 
+Settings are standard FPP plugin settings (saved to `config/plugin.fpp-legacy-proxy`).
+
 | Setting | What it does |
 |---|---|
 | Include devices from FPP's Proxy Settings | Merge FPP's proxy list into the device list (default on) |
 | Default view | Modern or Classic for devices you haven't switched individually |
-| Device response timeout | How long to wait for a slow controller (default 20 s) |
+| Device response timeout | How long to wait for a slow controller (default 20 s, 2–120) |
 
 ## Troubleshooting
 
@@ -135,10 +137,11 @@ The numeric code boxes are dropdowns. The labels come from the SanDevices manual
 
 ## Data and privacy
 
-- **Storage:** devices, settings and per-device view choices are kept in `plugindata/fpp-legacy-proxy/config.json`. A Reinstall keeps them; Uninstall removes them.
+- **Storage:** settings are in `config/plugin.fpp-legacy-proxy`. Devices, renames/hides of FPP devices and per-device view choices are in `plugindata/fpp-legacy-proxy/config.json`. A Reinstall keeps both; Uninstall removes both.
 - **Logs:** `logs/plugin-fpp-legacy-proxy.log`.
 - **Network:** the plugin talks only to the controllers you list, or that are in FPP's Proxy Settings, on your network.
 - **Access:** like FPP's own Proxy feature, anyone who can reach FPP's web UI can reach those controllers through it.
+- **Other websites can't use it:** changes (saving a controller setting, editing the device list) are refused when the browser reports that another website sent them, so a page open in another tab can't make your browser reboot a controller through FPP.
 
 ## Known limitations
 
@@ -158,18 +161,21 @@ The numeric code boxes are dropdowns. The labels come from the SanDevices manual
 | `GET devices` | Merged device list (yours + FPP Proxy Settings) |
 | `POST devices`, `POST devices/delete` | Add/update, remove your devices |
 | `POST devices/fpp` | Rename/hide an FPP-sourced device |
-| `POST prefs` | Plugin settings (not `settings`: FPP owns `/plugin/<repo>/settings/…`) |
 | `GET status/:target` | Quick reachability check |
 | `GET live/:target?path=/` | Current read-only values (Live mode) |
-| `GET view/:target/:mode` | Switch a device between modern and classic |
+| `POST view/:target/:mode` | Switch a device between modern and classic |
 | `GET/POST d/:target/**` | The device's pages |
 
 ## Development notes
 
 - **Help page:** `help/devices.php` renders this README in FPP's help dialog (F1 on the plugin page). Keep the README current and the help follows. Relative image and link paths work in both GitHub and FPP.
 - **No mbstring:** FPP does not install PHP's `mbstring` extension, so PHP code must not use `mb_*` functions. Use `preg` with `/u`, as `LegacyProxy::cut()` and `toUtf8()` do. Test with `php -d disable_functions=mb_substr,mb_check_encoding,mb_convert_encoding,mb_strlen,utf8_encode`. Parsedown uses `mb_strlen()` on lines containing tabs, so the help page converts tabs to spaces before parsing.
-- **Error handling:** every API route runs inside `flp_guard()`. An unexpected PHP error becomes a JSON error with status 500, plus a line in the plugin log. FPP's router would otherwise send it as a 200.
+- **`api.php` is loaded on every FPP API request**, so it only declares functions: no top-level code. Every global name is prefixed `fpplegacyproxy_` (functions) or `FppLegacyProxy` (class).
+- **Settings** use FPP's `PrintSetting*` helpers (saved through FPP's own `/api/plugin/<repo>/settings/<name>`) and are read with `ReadSettingFromFile()`.
+- **Cross-site requests:** state-changing routes are POST-only. POSTs and device URLs carrying a query are refused when `Sec-Fetch-Site` is `cross-site` or `same-site`. Query strings are never written to the log (they can hold controller passwords).
+- **Error handling:** every API route runs inside `fpplegacyproxy_guard()`. An unexpected PHP error becomes a JSON error with status 500, plus a line in the plugin log. FPP's router would otherwise send it as a 200.
 - **Route names:** FPP registers its own `/plugin/:RepoName/{icon,page,privacy,releaseNotes,settings,updates,upgrade}` routes first, and their `:params` are optional, so plugin routes must avoid those names.
+- **Menu:** `menu.inc` adds one Status/Control entry and one Help entry (guidelines §9.1).
 - **Device profiles:** profiles in `engine/reskin.py` (`PROFILES`) only change wording and add code dropdowns (`choices`); layout is generic. Pull requests with captured pages from other controllers are welcome.
 
 ## License
